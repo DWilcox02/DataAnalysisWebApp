@@ -5,16 +5,10 @@ from datetime import datetime
 from pytz import utc
 data = pandas.read_csv("reviews.csv", parse_dates=['Timestamp'])
 
-data['Weekday'] = data['Timestamp'].dt.strftime("%A")
-data['Daynum'] = data['Timestamp'].dt.strftime("%w")
-
-df = data.groupby(['Weekday', 'Daynum']).mean()
-df = df.sort_values('Daynum')
-x = df.index.get_level_values(0)
-y = df['Rating']
+data['Week'] = data['Timestamp'].dt.strftime("%Y-%U")
+df = data.groupby(['Week']).mean()
 
 
-#Functions as a dictionary and you can access and alter the keys with code
 chartDef = """
 {
     chart: {
@@ -76,13 +70,7 @@ chartDef = """
 }
 """
 
-def changeLabels(hc): # Function to change the titles and labels
-    hc.options.xAxis.title.text = "Day of Week"
-    hc.options.xAxis.labels.format = "{value}"
-    hc.options.yAxis.title.text = "Avg Rating"
-    hc.options.title.text = "Average Rating by Day"
-    hc.options.series[0].name = "Rating"
-
+#Not going to waste time with labels
 
 ## Create quasar page
 def app(): #returns quasar page
@@ -93,18 +81,10 @@ def app(): #returns quasar page
     h1 = jp.QDiv(a = wp, text = "Analysis of course reviews", classes = "text-h3 text-center q-pa-md") 
     #Quasar division (from HTML)
     p1 = jp.QDiv(a = wp, text = "These grpahs represent course review analysis")
-    #Adding highcharts graph, justpy combines them together
     hc = jp.HighCharts(a = wp, options = chartDef)
 
-    #Changing data
     hc.options.xAxis.categories = list(df.index)
-    hc.options.series[0].data = list(y)
-
-    changeLabels(hc)
-
-    # must convert Dataframe format into Highcharts series
-    # Use zip function
-    # Using hc.options... you can access the keys to the dictionary
+    hc.options.series[0].data = list(df["Rating"])
     return wp
 
 jp.justpy(app)

@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 justpy = "*"
 pandas-datareader = "*"
+pandas = "*"
+matplotlib = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.9"

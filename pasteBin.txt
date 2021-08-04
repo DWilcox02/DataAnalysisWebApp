@@ -1,58 +1,59 @@
 {
     chart: {
-        type: 'spline',
-        inverted: true
+        type: 'areaspline'
     },
     title: {
-        text: 'Atmosphere Temperature by Altitude'
+        text: 'Average fruit consumption during one week'
     },
-    subtitle: {
-        text: 'According to the Standard Atmosphere Model'
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 150,
+        y: 100,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
     },
     xAxis: {
-        reversed: false,
-        title: {
-            enabled: true,
-            text: 'Altitude'
-        },
-        labels: {
-            format: '{value} km'
-        },
-        accessibility: {
-            rangeDescription: 'Range: 0 to 80 km.'
-        },
-        maxPadding: 0.05,
-        showLastLabel: true
+        categories: [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
+        ],
+        plotBands: [{ // visualize the weekend
+            from: 4.5,
+            to: 6.5,
+            color: 'rgba(68, 170, 213, .2)'
+        }]
     },
     yAxis: {
         title: {
-            text: 'Temperature'
-        },
-        labels: {
-            format: '{value}°'
-        },
-        accessibility: {
-            rangeDescription: 'Range: -90°C to 20°C.'
-        },
-        lineWidth: 2
-    },
-    legend: {
-        enabled: false
+            text: 'Fruit units'
+        }
     },
     tooltip: {
-        headerFormat: '<b>{series.name}</b><br/>',
-        pointFormat: '{point.x} km: {point.y}°C'
+        shared: true,
+        valueSuffix: ' units'
+    },
+    credits: {
+        enabled: false
     },
     plotOptions: {
-        spline: {
-            marker: {
-                enable: false
-            }
+        areaspline: {
+            fillOpacity: 0.5
         }
     },
     series: [{
-        name: 'Temperature',
-        data: [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
-            [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
+        name: 'John',
+        data: [3, 4, 3, 5, 4, 10, 12]
+    }, {
+        name: 'Jane',
+        data: [1, 3, 4, 3, 3, 5, 4]
     }]
 }
