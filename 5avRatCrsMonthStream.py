@@ -7,7 +7,7 @@ from pytz import utc
 data = pandas.read_csv("reviews.csv", parse_dates=['Timestamp'])
 data["Month"] = data["Timestamp"].dt.strftime("%Y-%m")
 
-df = data.groupby(["Month", "Course Name"])["Rating"].mean().unstack()
+df = data.groupby(["Month", "Course Name"])["Rating"].count().unstack()
 
 chartDef = """
 {

@@ -1,4 +1,11 @@
 import justpy as jp
+import justpy as jp
+import pandas
+import matplotlib.pyplot as plt
+from datetime import datetime
+from pytz import utc
+
+data = pandas.read_csv("reviews.csv", parse_dates=['Timestamp'])
 
 ## Create quasar page
 def app(): #returns quasar page
