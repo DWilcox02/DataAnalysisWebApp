@@ -2,7 +2,9 @@
 
 Web app to display data in graph format. Requires installing JustPy and pandas.
 
-Malcolmis ginger
+Opens a local HTML page.
+
+Website links for reference:
 
 https://justpy.io/quasar_tutorial/QInput/
 
