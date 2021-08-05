@@ -1,3 +1,15 @@
+import justpy as jp
+import pandas
+import matplotlib.pyplot as plt
+from datetime import datetime
+from pytz import utc
+
+data = pandas.read_csv("reviews.csv", parse_dates=['Timestamp'])
+data["Month"] = data["Timestamp"].dt.strftime("%Y-%m")
+
+df = data.groupby(["Month", "Course Name"])["Rating"].mean().unstack()
+
+chartDef = """
 {
 
     chart: {
@@ -7,29 +19,7 @@
     },
 
     // Make sure connected countries have similar colors
-    colors: [
-        colors[0],
-        colors[1],
-        colors[2],
-        colors[3],
-        colors[4],
-        // East Germany, West Germany and Germany
-        Highcharts.color(colors[5]).brighten(0.2).get(),
-        Highcharts.color(colors[5]).brighten(0.1).get(),
-
-        colors[5],
-        colors[6],
-        colors[7],
-        colors[8],
-        colors[9],
-        colors[0],
-        colors[1],
-        colors[3],
-        // Soviet Union, Russia
-        Highcharts.color(colors[2]).brighten(-0.1).get(),
-        Highcharts.color(colors[2]).brighten(-0.2).get(),
-        Highcharts.color(colors[2]).brighten(-0.3).get()
-    ],
+    
 
     title: {
         floating: true,
@@ -48,31 +38,7 @@
         type: 'category',
         crosshair: true,
         categories: [
-            '',
-            '1924 Chamonix',
-            '1928 St. Moritz',
-            '1932 Lake Placid',
-            '1936 Garmisch-Partenkirchen',
-            '1940 <i>Cancelled (Sapporo)</i>',
-            '1944 <i>Cancelled (Cortina d\'Ampezzo)</i>',
-            '1948 St. Moritz',
-            '1952 Oslo',
-            '1956 Cortina d\'Ampezzo',
-            '1960 Squaw Valley',
-            '1964 Innsbruck',
-            '1968 Grenoble',
-            '1972 Sapporo',
-            '1976 Innsbruck',
-            '1980 Lake Placid',
-            '1984 Sarajevo',
-            '1988 Calgary',
-            '1992 Albertville',
-            '1994 Lillehammer',
-            '1998 Nagano',
-            '2002 Salt Lake City',
-            '2006 Turin',
-            '2010 Vancouver',
-            '2014 Sochi'
+            ''
         ],
         labels: {
             align: 'left',
@@ -95,28 +61,9 @@
     },
 
     annotations: [{
-        labels: [{
-            point: {
-                x: 5.5,
-                xAxis: 0,
-                y: 30,
-                yAxis: 0
-            },
-            text: 'Cancelled<br>during<br>World War II'
-        }, {
-            point: {
-                x: 18,
-                xAxis: 0,
-                y: 90,
-                yAxis: 0
-            },
-            text: 'Soviet Union fell,<br>Germany united'
-        }],
-        labelOptions: {
-            backgroundColor: 'rgba(255,255,255,0.5)',
-            borderColor: 'silver'
+        labels: []
         }
-    }],
+    ],
 
     plotOptions: {
         series: {
@@ -358,3 +305,27 @@
         sourceHeight: 600
     }
 }
+"""
+## Create quasar page
+def app(): #returns quasar page
+    wp = jp.QuasarPage()
+    #Add elements
+    #Classes add style, spaces in between each
+    #Respect the order that elements are added it goes top to bottom
+    h1 = jp.QDiv(a = wp, text = "Analysis of course reviews", classes = "text-h3 text-center q-pa-md") 
+    #Quasar division (from HTML)
+    p1 = jp.QDiv(a = wp, text = "These grpahs represent course review analysis")
+    hc = jp.HighCharts(a = wp, options= chartDef)
+    hc.options.xAxis.categories = list(df.index)
+    #Series is a list of dictionaries (represents line)
+    #Dicts contain name and data
+    #Data is another list
+
+    #Use loops (this time nested in the lists)
+    hcData = [{"name":v1, "data":[v2 for v2 in df[v1]]} for v1 in df.columns] 
+    hc.options.series = hcData
+
+    return wp
+
+jp.justpy(app)
+# Control C to stop the process
